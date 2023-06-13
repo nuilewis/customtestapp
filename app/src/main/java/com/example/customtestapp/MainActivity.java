@@ -1,8 +1,14 @@
 package com.example.customtestapp;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
+
+import com.nuilewis.material3lib.addNumbers;
+
+
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -11,4 +17,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
+
+int result = addNumbers.addTwoIntergers(3,6);
 }
