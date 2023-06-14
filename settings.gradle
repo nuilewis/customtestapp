@@ -1,22 +1,39 @@
+
+
 pluginManagement {
     repositories {
         google()
         mavenCentral()
         gradlePluginPortal()
+
     }
 }
+
 
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
-        maven {
-            url "https://maven.pkg.github.com/nuilewis/customlibrary"
-            credentials {
-//                username GITHUB_ID
-//                password GITHUB_PACKAGES_TOKEN
+        maven{
+                name = "GithubPackages"
+                url = "https://maven.pkg.github.com/nuilewis/material3lib"
+
+                credentials {
+                    username = System.getenv('GITHUB_ACTOR')
+                    password = System.getenv('GITHUB_TOKEN')
+                }
+
             }
+        maven{
+            name = "GithubPackages"
+            url = "https://maven.pkg.github.com/nuilewis/customlibrary"
+
+            credentials {
+                username = System.getenv('GITHUB_ACTOR')
+                password = System.getenv('GITHUB_TOKEN')
+            }
+
         }
     }
 }
