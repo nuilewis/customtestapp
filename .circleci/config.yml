@@ -43,16 +43,16 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
+      # Wait for emulator to start
+      - run:
+          name: Wait for emulator
+          command: circle-android wait-for-boot    
+
       # Run intergration tests
       - run:
           name: Run connectedAndroidTest task
           command: ./gradlew connectedAndroidTest
-
-      # Wait for emulator to start
-      - run:
-          name: Wait for emulator
-          command: circle-android wait-for-boot      
-
+  
       # Disable emulator animations
       - run:
           name: Disable animations on emulator
@@ -60,6 +60,7 @@ jobs:
             adb shell settings put global window_animation_scale 0.0
             adb shell settings put global transition_animation_scale 0.0
             adb shell settings put global animator_duration_scale 0.0
+            
       #Run intergration tests      
       - run:
           name: Run UI Tests
@@ -123,6 +124,4 @@ workflows:
   build-and-test-workflow:
     jobs:
       - test
-      - build:
-          requires:
-            - test
+      - build
