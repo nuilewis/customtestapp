@@ -1,11 +1,11 @@
 package com.example.customtestapp;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-
-import com.nuilewis.material3lib.addNumbers;
 
 
 
@@ -18,5 +18,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-int result = addNumbers.addTwoIntergers(3,6);
+    public void NavToPageTwoActivity(View view){
+        Intent intent = new Intent(MainActivity.this, AddNumbersActivity.class);
+
+        startActivity(intent);
+
+    }
+
+
+
 }
