@@ -3,8 +3,8 @@ version: 2.1
 orbs:
   android: circleci/android@2.3.0
 jobs:
-  test:
-    description: Runs unit tests and instrumented tests
+  test-granular:
+    description: using a granular command to set up emulators and Runs unit tests and instrumented tests
     executor:
       name: android/android-machine
       resource-class: large
@@ -20,12 +20,18 @@ jobs:
           no-window: true
           restore-gradle-cache-prefix: v1a
       - android/run-tests:
-          pre-test-command: chmod +x gradlew
+          test-command:  |
+            chmod +x gradlew
+            ./gradlew connectedDebugAndroidTest
+      - android/run-tests:
+          test-command:  |
+            chmod +x gradlew
+            ./gradlew connectedDebugAndroidTest
          
       - android/save-gradle-cache:
           cache-prefix: v1a 
-  build:
-    description: builds the application
+  test-convenience:
+    description: using the convenience start emulator and run tests command
     executor:
       name: android/android-machine
       resource-class: large
@@ -33,7 +39,7 @@ jobs:
     steps:
       - checkout
       - android/start-emulator-and-run-tests:
-          pre-test-command: chmod +x gradlew
+          test-command: chmod +x gradlew
           system-image: system-images;android-29;default;x86
 
 
@@ -44,7 +50,7 @@ jobs:
 workflows:
   build-and-test-workflow:
     jobs:
-      - test
+      - test-granular
       - android/build:
           executor:
             name: android/android-machine
@@ -56,6 +62,8 @@ workflows:
             name: android/android-machine
             resource-class: large
             tag: 2023.04.1
-          pre-test-command: chmod +x gradlew
-      - build
+          test-command: |
+            chmod +x gradlew
+            ./gradlew connectedDebugAndroidTest
+      - test-convenience
     
