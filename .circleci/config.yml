@@ -11,6 +11,9 @@ jobs:
       tag: 2023.04.1
     steps:
       - checkout
+      - run:
+          name: Chmod Permissions
+          command: sudo chmod +x gradlew
       - android/create-avd:
           avd-name: customavd
           install: true
@@ -20,27 +23,23 @@ jobs:
           no-window: true
           restore-gradle-cache-prefix: v1a
       - android/run-tests:
-          test-command:  |
-            chmod +x gradlew
-            ./gradlew connectedDebugAndroidTest
+          test-command: ./gradlew tests
       - android/run-tests:
-          test-command:  |
-            chmod +x gradlew
-            ./gradlew connectedDebugAndroidTest
+          test-command: ./gradlew connectedDebugAndroidTest
          
       - android/save-gradle-cache:
           cache-prefix: v1a 
-  test-convenience:
-    description: using the convenience start emulator and run tests command
-    executor:
-      name: android/android-machine
-      resource-class: large
-      tag: 2023.04.1
-    steps:
-      - checkout
-      - android/start-emulator-and-run-tests:
-          test-command: chmod +x gradlew
-          system-image: system-images;android-29;default;x86
+  # test-convenience:
+  #   description: using the convenience start emulator and run tests command
+  #   executor:
+  #     name: android/android-machine
+  #     resource-class: large
+  #     tag: 2023.04.1
+  #   steps:
+  #     - checkout
+  #     - android/start-emulator-and-run-tests:
+  #         test-command: chmod +x gradlew
+  #         system-image: system-images;android-29;default;x86
 
 
 
@@ -51,19 +50,19 @@ workflows:
   build-and-test-workflow:
     jobs:
       - test-granular
-      - android/build:
-          executor:
-            name: android/android-machine
-            resource-class: large
-            tag: 2023.04.1
+      # - android/build:
+      #     executor:
+      #       name: android/android-machine
+      #       resource-class: large
+      #       tag: 2023.04.1
 
-      - android/run-ui-tests:
-          executor:
-            name: android/android-machine
-            resource-class: large
-            tag: 2023.04.1
-          test-command: |
-            chmod +x gradlew
-            ./gradlew connectedDebugAndroidTest
-      - test-convenience
+      # - android/run-ui-tests:
+      #     executor:
+      #       name: android/android-machine
+      #       resource-class: large
+      #       tag: 2023.04.1
+      #     test-command: |
+      #       chmod +x gradlew
+      #       ./gradlew connectedDebugAndroidTest
+      # - test-convenience
     
