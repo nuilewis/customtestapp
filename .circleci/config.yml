@@ -34,23 +34,15 @@ jobs:
       - image: cimg/android:2023.06
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+      - android/restore-gradle-cache
+
       - run:
           name: Chmod Permissions
           command: sudo chmod +x gradlew
       - run:
-          name: "Download Dependencies"
-          command: |
-            chmod +x gradlew
-            ./gradlew androidDependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - android/save-gradle-cache
 
       - run:
           name: Build Library
@@ -79,19 +71,5 @@ workflows:
     jobs:
       - test-granular
       - build
-      # - android/build:
-      #     executor:
-      #       name: android/android-machine
-      #       resource-class: large
-      #       tag: 2023.04.1
-
-      # - android/run-ui-tests:
-      #     executor:
-      #       name: android/android-machine
-      #       resource-class: large
-      #       tag: 2023.04.1
-      #     test-command: |
-      #       chmod +x gradlew
-      #       ./gradlew connectedDebugAndroidTest
       # - test-convenience
     
