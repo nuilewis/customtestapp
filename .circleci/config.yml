@@ -23,7 +23,7 @@ jobs:
           no-window: true
           restore-gradle-cache-prefix: v1a
       - android/run-tests:
-          test-command: ./gradlew tests
+          test-command: ./gradlew test
       - android/run-tests:
           test-command: ./gradlew connectedDebugAndroidTest
          
