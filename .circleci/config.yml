@@ -19,7 +19,8 @@ jobs:
           avd-name: customavd
           no-window: true
           restore-gradle-cache-prefix: v1a
-      - android/run-tests
+      - android/run-tests:
+          pre-test-command: chmod +x gradlew
          
       - android/save-gradle-cache:
           cache-prefix: v1a 
@@ -32,6 +33,7 @@ jobs:
     steps:
       - checkout
       - android/start-emulator-and-run-tests:
+          pre-test-command: chmod +x gradlew
           system-image: system-images;android-29;default;x86
 
 
@@ -43,10 +45,17 @@ workflows:
   build-and-test-workflow:
     jobs:
       - test
+      - android/build:
+          executor:
+            name: android/android-machine
+            resource-class: large
+            tag: 2023.04.1
+
       - android/run-ui-tests:
           executor:
             name: android/android-machine
             resource-class: large
             tag: 2023.04.1
+          pre-test-command: chmod +x gradlew
       - build
     
