@@ -29,6 +29,34 @@ jobs:
          
       - android/save-gradle-cache:
           cache-prefix: v1a 
+  build:
+    docker:
+      - image: cimg/android:2023.06
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - run:
+          name: Chmod Permissions
+          command: sudo chmod +x gradlew
+      - run:
+          name: "Download Dependencies"
+          command: |
+            chmod +x gradlew
+            ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      - run:
+          name: Build Library
+          command: ./gradlew assemble
+    
+
   # test-convenience:
   #   description: using the convenience start emulator and run tests command
   #   executor:
@@ -50,6 +78,7 @@ workflows:
   build-and-test-workflow:
     jobs:
       - test-granular
+      - build
       # - android/build:
       #     executor:
       #       name: android/android-machine
